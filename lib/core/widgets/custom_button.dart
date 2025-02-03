@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum ButtonType { primary, secondary, outlined }
 
@@ -9,10 +10,12 @@ class CustomButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final double? width;
+  final double? height;
 
   const CustomButton({
     super.key,
     required this.text,
+    this.height,
     required this.onPressed,
     this.type = ButtonType.primary,
     this.isLoading = false,
@@ -25,6 +28,7 @@ class CustomButton extends StatelessWidget {
     final isDisabled = isLoading || onPressed == null;
 
     return SizedBox(
+      height: height ?? 50,
       width: width ?? double.infinity,
       child: ElevatedButton(
         onPressed: isDisabled ? null : onPressed,
@@ -44,7 +48,9 @@ class CustomButton extends StatelessWidget {
                   if (icon != null)
                     Icon(icon, size: 20, color: _getTextColor()),
                   if (icon != null) const SizedBox(width: 8),
-                  Text(text, style: TextStyle(color: _getTextColor())),
+                  Text(text,
+                      style:
+                          TextStyle(color: _getTextColor(), fontSize: 18.sp)),
                 ],
               ),
       ),
@@ -55,10 +61,10 @@ class CustomButton extends StatelessWidget {
     switch (type) {
       case ButtonType.primary:
         return ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.deepOrange,
           disabledBackgroundColor: Colors.blueGrey,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(25),
           ),
         );
       case ButtonType.secondary:
@@ -81,6 +87,6 @@ class CustomButton extends StatelessWidget {
   }
 
   Color _getTextColor() {
-    return type == ButtonType.outlined ? Colors.blue : Colors.white;
+    return type == ButtonType.outlined ? Colors.deepOrange : Colors.white;
   }
 }
