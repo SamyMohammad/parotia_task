@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:parotia_task/core/firebase/reservation_model.dart';
 import 'package:parotia_task/features/owner/my_rentals/presentation/widgets/rental_item.dart';
 
 class RentalsList extends StatelessWidget {
-  const RentalsList({super.key});
+  final List<ReservationModel> reservations;
+  const RentalsList({super.key, required this.reservations});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 15.h),
-      itemCount: 10,
+      itemCount: reservations.length,
       itemBuilder: (context, index) {
-        return const RentalItem();
+        return RentalItem(reservation: reservations[index]);
       },
     );
   }

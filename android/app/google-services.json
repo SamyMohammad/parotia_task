@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "885154613926",
+    "project_id": "parotia-65087",
+    "storage_bucket": "parotia-65087.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885154613926:android:ae8f9e108fc20cc78d4267",
+        "android_client_info": {
+          "package_name": "com.example.parotia_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjdJI7zcC7KZGtqCM3FF5kusOkN10lrDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,17 +8,18 @@ class PriceInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Expanded(
           child: CustomTextField(
+            controller: controller,
             hintText: 'Enter your price',
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
           ),
         ),
-        SizedBox(width: 16),
-        Text('K.D', style: TextStyle(fontSize: 16, color: Colors.black)),
+        const SizedBox(width: 16),
+        const Text('K.D', style: TextStyle(fontSize: 16, color: Colors.black)),
       ],
     );
   }

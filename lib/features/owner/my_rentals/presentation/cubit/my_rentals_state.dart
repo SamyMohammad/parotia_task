@@ -1,10 +1,14 @@
-part of 'my_rentals_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class MyRentalsState extends Equatable {
-  const MyRentalsState();
+import '../../../../../core/firebase/reservation_model.dart';
 
-  @override
-  List<Object> get props => [];
+part 'my_rentals_state.freezed.dart';
+
+@freezed
+class MyRentalsState with _$MyRentalsState {
+  const factory MyRentalsState.error(String message) = _Error;
+  const factory MyRentalsState.initial() = _Initial;
+  const factory MyRentalsState.loaded(List<ReservationModel> reservations) =
+      _Loaded;
+  const factory MyRentalsState.loading() = _Loading;
 }
-
-class MyRentalsInitial extends MyRentalsState {}

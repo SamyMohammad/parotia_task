@@ -1,17 +1,21 @@
+import 'package:faker/faker.dart' hide Image, Color;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:parotia_task/core/constants/app_assets.dart';
 import 'package:parotia_task/core/constants/app_sizes.dart';
 import 'package:parotia_task/core/extensions/context_ext.dart';
+import 'package:parotia_task/core/firebase/reservation_model.dart';
 import 'package:parotia_task/core/router/routes.dart';
 import 'package:parotia_task/core/theme/colors.dart';
 import 'package:parotia_task/core/theme/text_styles.dart';
 
 class RentalItem extends StatelessWidget {
-  const RentalItem({super.key});
+  final ReservationModel reservation;
+  const RentalItem({super.key, required this.reservation});
 
   @override
   Widget build(BuildContext context) {
+    final faker = Faker();
     return GestureDetector(
       onTap: () {
         // open bottom sheet with details
@@ -37,7 +41,8 @@ class RentalItem extends StatelessWidget {
                   child: TextButton(
                     isSemanticButton: true,
                     onPressed: () {
-                      context.pushNamed(Routes.editCalenderScreen);
+                      context.pushNamed(Routes.editCalenderScreen,
+                          arguments: reservation);
                     },
                     child: Text(
                       'Edit Calender',
@@ -64,9 +69,12 @@ class RentalItem extends StatelessWidget {
               flex: 3,
               child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Image.asset(
+                  child: FadeInImage(
+                    placeholder: const AssetImage(Assets.imagesHotel1),
+                    image: const NetworkImage(
+                        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" ??
+                            ''),
                     height: MediaQuery.sizeOf(context).height * 0.17,
-                    Assets.imagesHotel2,
                     fit: BoxFit.fitHeight,
                   )),
             ),
@@ -77,8 +85,9 @@ class RentalItem extends StatelessWidget {
                 spacing: Sizes.p4,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Sahary Apartment', style: TextStyles.font20BlackBold),
-                  Text('Al Jahra, Kuwait',
+                  Text(reservation.title ?? '',
+                      style: TextStyles.font20BlackBold),
+                  Text(reservation.title ?? '',
                       style: TextStyles.font18lightGreyLight),
                   Row(
                     children: [
@@ -87,10 +96,9 @@ class RentalItem extends StatelessWidget {
                       customTag("Package", Colors.orange),
                     ],
                   ),
-                  Text(
-                      'Lorem Ipsum is simply dummy text of the printing and...',
+                  Text(reservation.description ?? '',
                       style: TextStyles.font17darkGreyLight),
-                  Text('8 Guests . Male only',
+                  Text('${reservation.numberOfGuests} Guests . Male only',
                       style: TextStyle(fontSize: 17.sp)),
                 ],
               ),
@@ -105,13 +113,14 @@ class RentalItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.2),
+        color: color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color),
+        border: Border.all(color: Colors.white),
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontWeight: FontWeight.w600),
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
       ),
     );
   }

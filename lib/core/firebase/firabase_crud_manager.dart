@@ -3,103 +3,111 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parotia_task/core/exceptions/firebase_failure.dart';
 import 'package:parotia_task/core/firebase/firbase_result.dart';
+import 'package:parotia_task/core/firebase/reservation_model.dart';
 
-abstract class FirebaseCrudManager<T> {
-  // Create operation
-  Future<FirebaseResult<T>> create(T item);
-  
-  // Delete operations
-  // Future<FirebaseResult<void>> delete(String id);
-  Future<FirebaseResult<List<T>>> getAll();
-  // Read operations
-  Future<FirebaseResult<T>> getById(String id);
-  
-  // Future<FirebaseResult<List<T>>> getWhere({
-  //   required Query Function(Query query) queryBuilder,
-  // });
-  // Future<FirebaseResult<void>> partialUpdate(
-  //   String id, 
-  //   Map<String, dynamic> updates
-  // );
-  
-  // // Update operations
-  // Future<FirebaseResult<T>> update(T item);
+abstract class DatabaseCrudManager<T> {
+  Stream<DatabaseResult<T>> create(T item);
+  Stream<DatabaseResult<void>> delete(String id);
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAll();
+  Stream<DatabaseResult<T>> getById(String id);
+  Future update(T item);
 }
-class FirestoreCrudManager<T> implements FirebaseCrudManager<T> {
-  final FirebaseFirestore _firestore;
+
+class FirestoreCrudManager<T> implements DatabaseCrudManager<T> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionPath;
   final T Function(DocumentSnapshot) fromFirestore;
   final Map<String, dynamic> Function(T) toFirestore;
 
   FirestoreCrudManager({
-    required FirebaseFirestore firestore,
     required this.collectionPath,
     required this.fromFirestore,
     required this.toFirestore,
-  }) : _firestore = firestore;
+  });
 
   @override
-  Future<FirebaseResult<T>> create(T item) async {
-    try {
-      final docRef = await _firestore
+  Stream<DatabaseResult<T>> create(T item) {
+    final controller = StreamController<DatabaseResult<T>>();
+
+    _firestore
         .collection(collectionPath)
-        .add(toFirestore(item));
-      
+        .add(toFirestore(item))
+        .then((docRef) async {
       final docSnapshot = await docRef.get();
-      return FirebaseResult.success(fromFirestore(docSnapshot));
-    } catch (e) {
-      return FirebaseResult.failure(DatabaseFailure(
-        message: 'Failed to create item: ${e.toString()}'
-      ).message);
-    }
-  }
+      controller.add(DatabaseResult.success(fromFirestore(docSnapshot)));
+      controller.close();
+    }).catchError((error) {
+      controller.add(DatabaseResult.failure(
+          DatabaseFailure(message: 'Failed to create item: ${error.toString()}')
+              .message));
+      controller.close();
+    });
 
-
-
-  @override
-  Future<FirebaseResult<List<T>>> getAll() async {
-    try {
-      final querySnapshot = await _firestore
-        .collection(collectionPath)
-        .get();
-      
-      final items = querySnapshot.docs
-        .map((doc) => fromFirestore(doc))
-        .toList();
-      
-      return FirebaseResult.success(items);
-    } catch (e) {
-      return FirebaseResult.failure(DatabaseFailure(
-        message: 'Failed to fetch items: ${e.toString()}'
-      ).message);
-    }
+    return controller.stream;
   }
 
   @override
-  Future<FirebaseResult<T>> getById(String id) async {
-    try {
-      final docSnapshot = await _firestore
-        .collection(collectionPath)
-        .doc(id)
-        .get();
-      
+  Stream<DatabaseResult<void>> delete(String id) {
+    final controller = StreamController<DatabaseResult<void>>();
+
+    _firestore.collection(collectionPath).doc(id).delete().then((_) {
+      controller.add(const DatabaseResult.success(null));
+      controller.close();
+    }).catchError((error) {
+      controller.add(DatabaseResult.failure(
+          DatabaseFailure(message: 'Failed to delete item: ${error.toString()}')
+              .message));
+      controller.close();
+    });
+
+    return controller.stream;
+  }
+
+  @override
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAll() {
+    // final controller = StreamController<DatabaseResult<List<T>>>();
+
+    return _firestore.collection(collectionPath).snapshots();
+  }
+
+  @override
+  Stream<DatabaseResult<T>> getById(String id) {
+    final controller = StreamController<DatabaseResult<T>>();
+
+    _firestore.collection(collectionPath).doc(id).get().then((docSnapshot) {
       if (!docSnapshot.exists) {
-        return FirebaseResult.failure(NotFoundFailure(
-          message: 'Item with id $id not found'
-        ).message);
+        controller.add(DatabaseResult.failure(
+            NotFoundFailure(message: 'Item with id $id not found').message));
+      } else {
+        controller.add(DatabaseResult.success(fromFirestore(docSnapshot)));
       }
-      
-      return FirebaseResult.success(fromFirestore(docSnapshot));
-    } catch (e) {
-      return FirebaseResult.failure(DatabaseFailure(
-        message: 'Failed to fetch item: ${e.toString()}'
-      ).message);
-    }
+      controller.close();
+    }).catchError((error) {
+      controller.add(DatabaseResult.failure(
+          DatabaseFailure(message: 'Failed to fetch item: ${error.toString()}')
+              .message));
+      controller.close();
+    });
+
+    return controller.stream;
   }
 
- 
+  @override
+  Future update(T item) async {
+    // Assuming the item has an 'id' field
+    final itemMap = toFirestore(item);
+    // get the id of the doc
+    final reservationModel = item as ReservationModel;
 
+    await _firestore
+        .collection(collectionPath)
+        .doc(reservationModel.id ?? '')
+        .update(itemMap);
+  }
 
-
-
+  // Optional: Add a method to watch real-time updates for a collection
+  Stream<List<T>> watchCollection() {
+    return _firestore.collection(collectionPath).snapshots().map(
+        (snapshot) => snapshot.docs.map((doc) => fromFirestore(doc)).toList());
+  }
 }

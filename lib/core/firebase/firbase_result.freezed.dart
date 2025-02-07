@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$FirebaseResult<T> {
+mixin _$DatabaseResult<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String failure) failure,
@@ -57,21 +57,24 @@ mixin _$FirebaseResult<T> {
 }
 
 /// @nodoc
-abstract class $FirebaseResultCopyWith<T, $Res> {
-  factory $FirebaseResultCopyWith(
-          FirebaseResult<T> value, $Res Function(FirebaseResult<T>) then) =
-      _$FirebaseResultCopyWithImpl<T, $Res, FirebaseResult<T>>;
+abstract class $DatabaseResultCopyWith<T, $Res> {
+  factory $DatabaseResultCopyWith(
+          DatabaseResult<T> value, $Res Function(DatabaseResult<T>) then) =
+      _$DatabaseResultCopyWithImpl<T, $Res, DatabaseResult<T>>;
 }
 
 /// @nodoc
-class _$FirebaseResultCopyWithImpl<T, $Res, $Val extends FirebaseResult<T>>
-    implements $FirebaseResultCopyWith<T, $Res> {
-  _$FirebaseResultCopyWithImpl(this._value, this._then);
+class _$DatabaseResultCopyWithImpl<T, $Res, $Val extends DatabaseResult<T>>
+    implements $DatabaseResultCopyWith<T, $Res> {
+  _$DatabaseResultCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -85,12 +88,14 @@ abstract class _$$FailureImplCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$FailureImplCopyWithImpl<T, $Res>
-    extends _$FirebaseResultCopyWithImpl<T, $Res, _$FailureImpl<T>>
+    extends _$DatabaseResultCopyWithImpl<T, $Res, _$FailureImpl<T>>
     implements _$$FailureImplCopyWith<T, $Res> {
   __$$FailureImplCopyWithImpl(
       _$FailureImpl<T> _value, $Res Function(_$FailureImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -115,7 +120,7 @@ class _$FailureImpl<T> implements Failure<T> {
 
   @override
   String toString() {
-    return 'FirebaseResult<$T>.failure(failure: $failure)';
+    return 'DatabaseResult<$T>.failure(failure: $failure)';
   }
 
   @override
@@ -129,7 +134,9 @@ class _$FailureImpl<T> implements Failure<T> {
   @override
   int get hashCode => Object.hash(runtimeType, failure);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FailureImplCopyWith<T, _$FailureImpl<T>> get copyWith =>
@@ -198,11 +205,14 @@ class _$FailureImpl<T> implements Failure<T> {
   }
 }
 
-abstract class Failure<T> implements FirebaseResult<T> {
+abstract class Failure<T> implements DatabaseResult<T> {
   const factory Failure(final String failure) = _$FailureImpl<T>;
 
   String get failure;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FailureImplCopyWith<T, _$FailureImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -218,12 +228,14 @@ abstract class _$$SuccessImplCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$SuccessImplCopyWithImpl<T, $Res>
-    extends _$FirebaseResultCopyWithImpl<T, $Res, _$SuccessImpl<T>>
+    extends _$DatabaseResultCopyWithImpl<T, $Res, _$SuccessImpl<T>>
     implements _$$SuccessImplCopyWith<T, $Res> {
   __$$SuccessImplCopyWithImpl(
       _$SuccessImpl<T> _value, $Res Function(_$SuccessImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -248,7 +260,7 @@ class _$SuccessImpl<T> implements Success<T> {
 
   @override
   String toString() {
-    return 'FirebaseResult<$T>.success(data: $data)';
+    return 'DatabaseResult<$T>.success(data: $data)';
   }
 
   @override
@@ -263,7 +275,9 @@ class _$SuccessImpl<T> implements Success<T> {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
@@ -332,11 +346,14 @@ class _$SuccessImpl<T> implements Success<T> {
   }
 }
 
-abstract class Success<T> implements FirebaseResult<T> {
+abstract class Success<T> implements DatabaseResult<T> {
   const factory Success(final T data) = _$SuccessImpl<T>;
 
   T get data;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DatabaseResult
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SuccessImplCopyWith<T, _$SuccessImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }
